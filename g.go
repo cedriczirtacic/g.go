@@ -179,14 +179,14 @@ func load_bookmarks(b *[]Link, f **os.File) error {
 				if string(tname) == "a" && hasattr == true {
 					for {
 						attr, val, more := tokenizer.TagAttr()
-						if !more {
-							break
-						}
 						if string(attr) == "href" {
 							(*b)[linklen] = Link{
 								link: string(val),
 							}
 							read_text = true
+						}
+						if !more {
+							break
 						}
 					}
 				}
