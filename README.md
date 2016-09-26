@@ -29,6 +29,13 @@ $ sudo ./g -port 80 -disable_cmds -ifile test.html
 2016/09/25 21:33:06 Reading bookmarks from: test.html
 2016/09/25 21:33:06 Listening on port: 80
 ```
+The best way to run **g** is this:
+```bash
+$ sudo echo -e "127.0.0.1\tg" >> /etc/hosts
+$ sudo ./g -port 80
+```
+Then visit *http://g/my bookmark* and :trollface:
+
 Do you have any firewall up? Check that before running this! :feelsgood:
 
 ## Commands
