@@ -35,6 +35,7 @@ $ sudo echo -e "127.0.0.1\tg" >> /etc/hosts
 $ sudo ./g -port 80
 ```
 Then visit *http://g/my bookmark* and :trollface:
+Check @rgbkrk to see how you can add his or my code as a search engine and just type **g my bookmark** in the URL.
 
 Do you have any firewall up? Check that before running this! :feelsgood:
 
