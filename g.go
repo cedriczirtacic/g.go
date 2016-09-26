@@ -79,7 +79,7 @@ func main(){
 	bookmarks = make([]Link, default_buff)
 	err = load_bookmarks(&bookmarks, &bfile)
 	if err != nil {
-		fmt.Printf("%s\n", err)
+		log.Fatal(err)
 		goto quit
 	}
 	
