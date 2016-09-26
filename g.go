@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"flag"
+	"errors"
 	"net/http"
 	)
 
@@ -76,13 +77,19 @@ func main(){
 	
 	//create list with name->links
 	bookmarks = make([]Link, default_buff)
-	load_bookmarks(&bookmarks, &bfile)
+	err = load_bookmarks(&bookmarks, &bfile)
+	if err != nil {
+		fmt.Printf("%s\n", err)
+		goto quit
+	}
 	
 	// get ready to serve the bookmarks!
 	http.ListenAndServe(
 		fmt.Sprintf(":%d", port) , http.HandlerFunc(handle_bookmarks) )
 
+quit:
 	err = bfile.Close() // lets assume nothing fails here and we are happy
+	os.Exit(0)
 }
 
 // this little fella is going to get and process the requests
@@ -98,8 +105,10 @@ func handle_bookmarks(w http.ResponseWriter, r *http.Request) {
 
 			switch r.URL.RawQuery {
 				case "reload":
-					if load_bookmarks(&bookmarks, &bfile) {
-						fmt.Fprintf(w, "Bookmarks reloaded!\n");
+					var err error
+					err = load_bookmarks(&bookmarks, &bfile)
+					if err != nil {
+						fmt.Fprintf(w, "%s", err);
 					}
 					break
 				case "print":
@@ -135,7 +144,7 @@ func handle_bookmarks(w http.ResponseWriter, r *http.Request) {
 }
 
 // read and re-read bookmarks file
-func load_bookmarks(b *[]Link, f **os.File) bool {
+func load_bookmarks(b *[]Link, f **os.File) error {
 	var linklen int = 0
 	var read_text bool = false
 	var tokenizer *html.Tokenizer
@@ -185,13 +194,13 @@ func load_bookmarks(b *[]Link, f **os.File) bool {
 		}
 	}
 	
-	if len(bookmarks) < 1 {
-		return false
+	if len(bookmarks[0].name) < 1 {
+		return errors.New("load_bookmarks() error: we got an empty bookmarks array")
 	}
 
 	// let's return to the begining of the file
 	// in case it's a reload
 	_,_ = (*f).Seek(0,0)
 	
-	return true
+	return nil
 }
