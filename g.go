@@ -133,13 +133,14 @@ func handle_bookmarks(w http.ResponseWriter, r *http.Request) {
 				if bookmark == bookmarks[i].name {
 					log.Printf("Delivered bookmark for: %s", r.RemoteAddr)
 					http.Redirect(w, r, bookmarks[i].link, 302)
-					break
+					return
 				}
 			}
 		}
 
 		// respond with 503 if nothing found
 		http.Error(w, "Bookmark doesn't exists!", 503)
+		return
 	}
 }
 
