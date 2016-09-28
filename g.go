@@ -203,6 +203,16 @@ func load_bookmarks(b *[]Link, f **os.File) error {
 		return errors.New("load_bookmarks() error: we got an empty bookmarks array")
 	}
 
+	// delete the rest if it's a reload
+	for {
+		if (*b)[linklen].name != "" {
+			(*b)[linklen] = Link{"", ""}
+		} else {
+			break
+		}
+		linklen++
+	}
+
 	// let's return to the begining of the file
 	// in case it's a reload
 	_, _ = (*f).Seek(0, 0)
