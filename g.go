@@ -20,6 +20,7 @@ const (
 	default_port = 8080
 	default_file = "g.html"
 	default_buff = 1024
+	default_addr = "0.0.0.0"
 	default_comm = false
 )
 
@@ -27,6 +28,7 @@ const (
 var (
 	port         int
 	ifile        string
+	addr         string
 	bfile        *os.File
 	comm_disable bool
 )
@@ -44,6 +46,7 @@ func init() {
 	flag.IntVar(&port, "port", default_port, "Listening port.")
 	flag.BoolVar(&comm_disable, "disable_cmds", default_comm, "Disable commands.")
 	flag.StringVar(&ifile, "if", default_file, "Input file to parse.")
+	flag.StringVar(&addr, "addr", default_addr, "Set listening IP address.")
 
 	// parse all params
 	flag.Parse()
@@ -85,7 +88,7 @@ func main() {
 
 	// get ready to serve the bookmarks!
 	http.ListenAndServe(
-		fmt.Sprintf(":%d", port), http.HandlerFunc(handle_bookmarks))
+		fmt.Sprintf("%s:%d", addr, port), http.HandlerFunc(handle_bookmarks))
 
 quit:
 	err = bfile.Close() // lets assume nothing fails here and we are happy
@@ -110,6 +113,7 @@ func handle_bookmarks(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					fmt.Fprintf(w, "%s", err)
 				}
+				fmt.Fprintf(w, "Bookmarks reloaded.")
 				break
 			case "print":
 				fmt.Fprintf(w, "Bookmarks:\n")
