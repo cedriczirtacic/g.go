@@ -32,7 +32,7 @@ $ sudo ./g -port 80 -disable_cmds -ifile test.html
 The best way to run **g** is this:
 ```bash
 $ sudo echo -e "127.0.0.1\tg" >> /etc/hosts
-$ sudo ./g -port 80
+$ sudo ./g -port 80 -addr 127.0.0.1
 ```
 Then visit *http://g/my bookmark* and :trollface:
 
