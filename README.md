@@ -53,6 +53,3 @@ Bookmarks:
 Bookmarks reloaded!
 ```
 
-## TODO
-
-* Catch CTRL + C or SIGKILL signals and log + close fds.
