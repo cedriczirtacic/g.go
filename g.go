@@ -10,6 +10,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
 // import html parsing capabilities
@@ -61,6 +63,10 @@ func init() {
 func main() {
 	var err error
 
+	// needed to catch SIGINT or ^C
+	sig := make(chan os.Signal, 1)
+	signal.Notify(sig, syscall.SIGINT)
+
 	// print runing info
 	log.Printf("Reading bookmarks from: %s\n", ifile)
 	log.Printf("Listening on port: %d\n", port)
@@ -78,21 +84,27 @@ func main() {
 		os.Exit(3)
 	}
 
+	// catching SIGINT
+	go func(f *os.File) {
+		<-sig
+		f.Close()
+		log.Fatal("Interrupt received. Exiting...")
+		os.Exit(4)
+	}(bfile)
+
 	//create list with name->links
 	bookmarks = make([]Link, default_buff)
 	err = load_bookmarks(&bookmarks, &bfile)
 	if err != nil {
 		log.Fatal(err)
-		goto quit
+		_ = bfile.Close()
+		os.Exit(5)
 	}
 
 	// get ready to serve the bookmarks!
 	http.ListenAndServe(
 		fmt.Sprintf("%s:%d", addr, port), http.HandlerFunc(handle_bookmarks))
 
-quit:
-	err = bfile.Close() // lets assume nothing fails here and we are happy
-	os.Exit(0)
 }
 
 // this little fella is going to get and process the requests
