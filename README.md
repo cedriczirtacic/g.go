@@ -1,4 +1,5 @@
 # g
+[![Build Status](https://travis-ci.org/cedriczirtacic/g.go.svg?branch=master)](https://travis-ci.org/cedriczirtacic/g.go)
 
 This is an stolen idea from https://github.com/rgbkrk/i (props to @rgbkrk)
 There're some small changes:
